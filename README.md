@@ -10,6 +10,7 @@ PHP library to split names into their respective components.  Besides detecting 
 **Usage:**
     
     use FullNameParser\FullNameParser;
+    
     $parser = new FullNameParser();
     $parser->parse_name("Mr Anthony R Von Fange III");
 
