@@ -1,6 +1,6 @@
 <?php
 
-
+namespace FullNameParser;
 
 /**
  * Split a full name into its constituent parts
@@ -20,11 +20,9 @@
  * //   - eric willis [list of honorifics](http://notes.ericwillis.com/2009/11/common-name-prefixes-titles-and-honorifics/)
  * //   - `TomThak` for raising issue #16 and providing [wikepedia resource](https://cs.wikipedia.org/wiki/Akademick%C3%BD_titul)
  * //   - `atla5` for closing the issue.
-*/
-class FullNameParser {
-
-
-
+ */
+class FullNameParser
+{
   /**
    * Create the dictionary of terms for use later
    *
@@ -47,7 +45,7 @@ class FullNameParser {
       'Sir' => array('sir'),
       'Hon.' => array('honorable'),
       'Pres.' => array('president'),
-      'Gov' => array('governor','governer'),
+      'Gov' => array('governor', 'governer'),
       'Ofc' => array('officer'),
       'Msgr' => array('monsignor'),
       'Sr.' => array('sister'),
@@ -61,7 +59,7 @@ class FullNameParser {
       'Pvt.' => array('private'),
       'Cpl.' => array('corporal'),
       'Sgt.' => array('sargent'),
-      'Adm.' => array('administrative','administrator','administrater'),
+      'Adm.' => array('administrative', 'administrator', 'administrater'),
       'Maj.' => array('major'),
       'Capt.' => array('captain'),
       'Cmdr.' => array('commander'),
@@ -76,7 +74,7 @@ class FullNameParser {
       'Ing. sheet.' => array('architect engineer', 'intrudes upon architectus'),
       'JUDr.' => array('juris doctor utriusque', 'doctor rights'),
       'MDDr.' => array('doctor of dental medicine', 'medicinae doctor dentium'),
-      'MgA.' => array('master of arts','magister artis'),
+      'MgA.' => array('master of arts', 'magister artis'),
       'Mgr.' => array('master'),
       'MD.' => array('doctor of general medicine'),
       'DVM.' => array('doctor of veterinary medine'),
@@ -92,8 +90,8 @@ class FullNameParser {
       'ThDr.' => array('doctor of theology'),
       'Th.D.' => array('doctor of theology'),
       'ThLic.' => array('licentiate of theology'),
-      'ThMgr.' => array('master of theology','master of divinity'),
-      'Acad.' => array('academian','academic'),
+      'ThMgr.' => array('master of theology', 'master of divinity'),
+      'Acad.' => array('academian', 'academic'),
       'ArtD.' => array('doctor of arts'),
       'DiS.' => array('certified specialist'),
       'As.' => array('assistant'),
@@ -101,28 +99,30 @@ class FullNameParser {
       'Doc.' => array('associate professor'),
       ' ' => array('the')
     ),
-    'compound' => array('da','de','del','della', 'dem', 'den', 'der','di','du', 'het', 'la', 'onder', 'op', 'pietro','st.','st','\'t', 'ten', 'ter','van','vanden','vere','von'),
+    'compound' => array('da', 'de', 'del', 'della', 'dem', 'den', 'der', 'di', 'du', 'het', 'la', 'onder', 'op', 'pietro', 'st.', 'st', '\'t', 'ten', 'ter', 'van', 'vanden', 'vere', 'von'),
     'suffixes' => array(
-      'line' => array('I','II','III','IV','V','1st','2nd','3rd','4th','5th','Senior','Junior','Jr','Sr'),
-      'prof' => array('AO', 'B.A.', 'M.Sc', 'BCompt', 'PhD', 'Ph.D.','APR','RPh','PE','MD', 'M.D.', 'MA','DMD','CME', 'BSc', 'Bsc', 'BSc(hons)', 'Ph.D.', 'BEng', 'M.B.A.', 'MBA', 'FAICD', 'CM', 'OBC', 'M.B.', 'ChB', 'FRCP', 'FRSC',
-          'FREng', 'Esq', 'MEng', 'MSc', 'J.D.', 'JD', 'BGDipBus', 'Dip', 'Dipl.Phys','M.H.Sc.', 'MPA', 'B.Comm', 'B.Eng', 'B.Acc', 'FSA', 'PGDM', 'FCPA', 'RN', 'R.N.', 'MSN',
-          'PCA', 'PCCRM','PCFP','PCGD','PCHR','PCM','PCPS','PCPM','PCSCM','PCSM','PCMM','PCTC','ACA', 'FCA','ACMA', 'FCMA','AAIA', 'FAIA','CCC','MIPA','FIPA','CIA','CFE','CISA','CFAP',
-          'QC', 'Q.C.', 'M.Tech', 'CTA', 'C.I.M.A.', 'B.Ec',
-          'CFIA','ICCP','CPS','CAP-OM','CAPTA','TNAOAP','AFA','AVA','ASA','CAIA','CBA','CVA','ICVS','CIIA','CMU','PFM','PRM','CFP','CWM','CCP','EA','CCMT','CGAP','CDFM','CFO','CGFM','CGAT','CGFO','CMFO','CPFO','CPFA',
-          'BMD','BIET','P.Eng','PE', 'MBBS', 'MB', 'BCh', 'BAO', 'BMBS', 'MBBChir', 'MBChBa','MPhil','LL.D', 'LLD', 'D.Lit','DEA', 'DESS', 'DClinPsy', 'DSc', 'MRes', 'M.Res', 'Psy.D', 'Pharm.D',
-          'BA(Admin)', 'BAcc','BACom','BAdmin','BAE','BAEcon','BA(Ed)','BA(FS)','BAgr','BAH','BAI','BAI(Elect)','BAI(Mech)','BALaw','BAO','BAppSc','BArch','BArchSc','BARelSt','BASc','BASoc', 'DDS', 'D.D.S.',
-          'BASS','BATheol','BBA','BBLS', 'BBS','BBus','BChem','BCJ','BCL','BCLD(SocSc)','BClinSci','BCom','BCombSt','BCommEdCommDev','BComp','BComSc','BCoun','BD','BDes','BE','BEcon','BEcon&Fin', 'M.P.P.M.', 'MPPM',
-          'BEconSci', 'BEd','BEng','BES','BEng(Tech)','BFA','BFin','BFLS','BFST','BH','BHealthSc','BHSc','BHy','BJur','BL','BLE','BLegSc','BLib','BLing','BLitt','BLittCelt','BLS','BMedSc','BMet',
-          'BMid', 'BMin','BMS','BMSc','BMSc','BMS','BMus','BMusEd','BMusPerf','BN', 'BNS','BNurs','BOptom','BPA','BPharm', 'BPhil', 'TTC', 'DIP', 'Tchg', 'BEd', 'MEd','ACIB', 'FCIM', 'FCIS', 'FCS', 'Fcs',
-          'Bachelor', 'O.C.', 'JP', 'C.Eng', 'C.P.A.', 'B.B.S.', 'MBE', 'GBE', 'KBE', 'DBE', 'CBE', 'OBE', 'MRICS',  'D.P.S.K.', 'D.P.P.J.', 'DPSK', 'DPPJ', 'B.B.A.', 'GBS', 'MIGEM', 'M.I.G.E.M.', 'FCIS',    
-          'BPhil(Ed)', 'BPhys','BPhysio','BPl','BRadiog','BSc', 'B.Sc', 'BScAgr','BSc(Dairy)','BSc(DomSc)','BScEc','BScEcon','BSc(Econ)','BSc(Eng)','BScFor','BSc(HealthSc)','BSc(Hort)', 'BBA', 'B.B.A.',
-          'BSc(MCRM)', 'BSc(Med)','BSc(Mid)','BSc(Min)','BSc(Psych)', 'BSc(Tech)','BSD', 'BSocSc','BSS','BStSu','BTchg','BTCP','BTech','BTechEd','BTh','BTheol','BTS','EdB','LittB','LLB','MA','MusB','ScBTech', 
-          'CEng', 'FCA', 'CFA', 'Cfa', 'C.F.A.', 'LLB', 'LL.B', 'LLM', 'LL.M', 'CA(SA)', 'C.A.', 'CA','CPA',  'Solicitor',  'DMS', 'FIWO', 'CEnv', 'MICE', 'MIWEM', 'B.Com', 'BCom', 'BAcc', 'BA', 'BEc', 'MEc', 'HDip', 'B.Bus.', 'E.S.C.P.' )
+      'line' => array('I', 'II', 'III', 'IV', 'V', '1st', '2nd', '3rd', '4th', '5th', 'Senior', 'Junior', 'Jr', 'Sr'),
+      'prof' => array(
+        'AO', 'B.A.', 'M.Sc', 'BCompt', 'PhD', 'Ph.D.', 'APR', 'RPh', 'PE', 'MD', 'M.D.', 'MA', 'DMD', 'CME', 'BSc', 'Bsc', 'BSc(hons)', 'Ph.D.', 'BEng', 'M.B.A.', 'MBA', 'FAICD', 'CM', 'OBC', 'M.B.', 'ChB', 'FRCP', 'FRSC',
+        'FREng', 'Esq', 'MEng', 'MSc', 'J.D.', 'JD', 'BGDipBus', 'Dip', 'Dipl.Phys', 'M.H.Sc.', 'MPA', 'B.Comm', 'B.Eng', 'B.Acc', 'FSA', 'PGDM', 'FCPA', 'RN', 'R.N.', 'MSN',
+        'PCA', 'PCCRM', 'PCFP', 'PCGD', 'PCHR', 'PCM', 'PCPS', 'PCPM', 'PCSCM', 'PCSM', 'PCMM', 'PCTC', 'ACA', 'FCA', 'ACMA', 'FCMA', 'AAIA', 'FAIA', 'CCC', 'MIPA', 'FIPA', 'CIA', 'CFE', 'CISA', 'CFAP',
+        'QC', 'Q.C.', 'M.Tech', 'CTA', 'C.I.M.A.', 'B.Ec',
+        'CFIA', 'ICCP', 'CPS', 'CAP-OM', 'CAPTA', 'TNAOAP', 'AFA', 'AVA', 'ASA', 'CAIA', 'CBA', 'CVA', 'ICVS', 'CIIA', 'CMU', 'PFM', 'PRM', 'CFP', 'CWM', 'CCP', 'EA', 'CCMT', 'CGAP', 'CDFM', 'CFO', 'CGFM', 'CGAT', 'CGFO', 'CMFO', 'CPFO', 'CPFA',
+        'BMD', 'BIET', 'P.Eng', 'PE', 'MBBS', 'MB', 'BCh', 'BAO', 'BMBS', 'MBBChir', 'MBChBa', 'MPhil', 'LL.D', 'LLD', 'D.Lit', 'DEA', 'DESS', 'DClinPsy', 'DSc', 'MRes', 'M.Res', 'Psy.D', 'Pharm.D',
+        'BA(Admin)', 'BAcc', 'BACom', 'BAdmin', 'BAE', 'BAEcon', 'BA(Ed)', 'BA(FS)', 'BAgr', 'BAH', 'BAI', 'BAI(Elect)', 'BAI(Mech)', 'BALaw', 'BAO', 'BAppSc', 'BArch', 'BArchSc', 'BARelSt', 'BASc', 'BASoc', 'DDS', 'D.D.S.',
+        'BASS', 'BATheol', 'BBA', 'BBLS', 'BBS', 'BBus', 'BChem', 'BCJ', 'BCL', 'BCLD(SocSc)', 'BClinSci', 'BCom', 'BCombSt', 'BCommEdCommDev', 'BComp', 'BComSc', 'BCoun', 'BD', 'BDes', 'BE', 'BEcon', 'BEcon&Fin', 'M.P.P.M.', 'MPPM',
+        'BEconSci', 'BEd', 'BEng', 'BES', 'BEng(Tech)', 'BFA', 'BFin', 'BFLS', 'BFST', 'BH', 'BHealthSc', 'BHSc', 'BHy', 'BJur', 'BL', 'BLE', 'BLegSc', 'BLib', 'BLing', 'BLitt', 'BLittCelt', 'BLS', 'BMedSc', 'BMet',
+        'BMid', 'BMin', 'BMS', 'BMSc', 'BMSc', 'BMS', 'BMus', 'BMusEd', 'BMusPerf', 'BN', 'BNS', 'BNurs', 'BOptom', 'BPA', 'BPharm', 'BPhil', 'TTC', 'DIP', 'Tchg', 'BEd', 'MEd', 'ACIB', 'FCIM', 'FCIS', 'FCS', 'Fcs',
+        'Bachelor', 'O.C.', 'JP', 'C.Eng', 'C.P.A.', 'B.B.S.', 'MBE', 'GBE', 'KBE', 'DBE', 'CBE', 'OBE', 'MRICS',  'D.P.S.K.', 'D.P.P.J.', 'DPSK', 'DPPJ', 'B.B.A.', 'GBS', 'MIGEM', 'M.I.G.E.M.', 'FCIS',
+        'BPhil(Ed)', 'BPhys', 'BPhysio', 'BPl', 'BRadiog', 'BSc', 'B.Sc', 'BScAgr', 'BSc(Dairy)', 'BSc(DomSc)', 'BScEc', 'BScEcon', 'BSc(Econ)', 'BSc(Eng)', 'BScFor', 'BSc(HealthSc)', 'BSc(Hort)', 'BBA', 'B.B.A.',
+        'BSc(MCRM)', 'BSc(Med)', 'BSc(Mid)', 'BSc(Min)', 'BSc(Psych)', 'BSc(Tech)', 'BSD', 'BSocSc', 'BSS', 'BStSu', 'BTchg', 'BTCP', 'BTech', 'BTechEd', 'BTh', 'BTheol', 'BTS', 'EdB', 'LittB', 'LLB', 'MA', 'MusB', 'ScBTech',
+        'CEng', 'FCA', 'CFA', 'Cfa', 'C.F.A.', 'LLB', 'LL.B', 'LLM', 'LL.M', 'CA(SA)', 'C.A.', 'CA', 'CPA',  'Solicitor',  'DMS', 'FIWO', 'CEnv', 'MICE', 'MIWEM', 'B.Com', 'BCom', 'BAcc', 'BA', 'BEc', 'MEc', 'HDip', 'B.Bus.', 'E.S.C.P.'
+      )
     ),
-    'vowels' => array('a','e','i','o','u')
+    'vowels' => array('a', 'e', 'i', 'o', 'u')
   );
 
-  protected $not_nicknames = array( "(hons)");
+  protected $not_nicknames = array("(hons)");
 
 
   /**
@@ -131,7 +131,8 @@ class FullNameParser {
    * @param string $name the full name you wish to parse
    * @return array returns associative array of name parts
    */
-  public static function parse($name) {
+  public static function parse($name)
+  {
     $parser = new self();
     return $parser->parse_name($name);
   }
@@ -143,7 +144,8 @@ class FullNameParser {
    * @param string $name the full name you wish to parse
    * @return array returns associative array of name parts
    */
-  public function parse_name($full_name) {
+  public function parse_name($full_name)
+  {
 
     # Remove leading/trailing whitespace
     $full_name = trim($full_name);
@@ -162,11 +164,11 @@ class FullNameParser {
     $first_suffix_index = mb_strlen($full_name);
     foreach ($professional_suffix as $key => $psx) {
       $start = mb_strpos($full_name, $psx);
-      if( $start === FALSE ) {
-        echo "ASSERT ERROR, the professional suffix:".$psx." cannot be found in the full name:".$full_name."<br>";
+      if ($start === FALSE) {
+        echo "ASSERT ERROR, the professional suffix:" . $psx . " cannot be found in the full name:" . $full_name . "<br>";
         continue;
       }
-      if( $start < $first_suffix_index) {
+      if ($start < $first_suffix_index) {
         $first_suffix_index = $start;
       }
     }
@@ -187,12 +189,12 @@ class FullNameParser {
       # Get rid of consecutive spaces left by the removal
       $full_name = str_replace('  ', ' ', $full_name);
     }
-    
+
     # Grab a list of words from the remainder of the full name
     $unfiltered_name_parts = $this->break_words($full_name);
 
     # Is first word a title or multiple titles consecutively?
-    if( count($unfiltered_name_parts)) {
+    if (count($unfiltered_name_parts)) {
       // only start looking if there are any words left in the name to process
       while (count($unfiltered_name_parts) > 0 && $s = $this->is_salutation($unfiltered_name_parts[0])) {
         $salutation .= "$s ";
@@ -201,9 +203,9 @@ class FullNameParser {
       $salutation = trim($salutation);
       // Find if there is a line suffix, if so then move it out
       # Is last word a suffix or multiple suffixes consecutively?
-      while (count($unfiltered_name_parts) > 0 && $s = $this->is_line_suffix($unfiltered_name_parts[count($unfiltered_name_parts)-1], $full_name)) {
-        if( $suffix != "") {
-          $suffix = $s.", ".$suffix;
+      while (count($unfiltered_name_parts) > 0 && $s = $this->is_line_suffix($unfiltered_name_parts[count($unfiltered_name_parts) - 1], $full_name)) {
+        if ($suffix != "") {
+          $suffix = $s . ", " . $suffix;
         } else {
           $suffix .= $s;
         }
@@ -219,14 +221,14 @@ class FullNameParser {
     $name_arr = array();
     foreach ($unfiltered_name_parts as $key => $name_part) {
       $name_part = trim($name_part);
-      $name_part = rtrim($name_part,',');
-      if(mb_strlen($name_part) == '1') {
+      $name_part = rtrim($name_part, ',');
+      if (mb_strlen($name_part) == '1') {
         // If any word left is of one character that is not alphabetic then it is not a real word, so remove it
-        if( ! $this->mb_ctype_alpha($name_part)) {
+        if (!$this->mb_ctype_alpha($name_part)) {
           $name_part = "";
         }
       }
-      if(mb_strlen(trim($name_part)) ) {
+      if (mb_strlen(trim($name_part))) {
         $name_arr[] = $name_part;
       }
     }
@@ -236,7 +238,7 @@ class FullNameParser {
     $end = count($unfiltered_name_parts);
 
     # concat the first name
-    for ($i=0; $i<$end-1; $i++) {
+    for ($i = 0; $i < $end - 1; $i++) {
       $word = $unfiltered_name_parts[$i];
       # move on to parsing the last name if we find an indicator of a compound last name (Von, Van, etc)
       # we use $i != 0 to allow for rare cases where an indicator is actually the first name (like "Von Fabella")
@@ -251,37 +253,34 @@ class FullNameParser {
           # if so, do a look-ahead to see if they go by their middle name
           # for ex: "R. Jason Smith" => "Jason Smith" & "R." is stored as an initial
           # but "R. J. Smith" => "R. Smith" and "J." is stored as an initial
-          if ($this->is_initial($unfiltered_name_parts[$i+1])) {
-            $fname .= " ".mb_strtoupper($word);
-          }
-          else {
-            $initials .= " ".mb_strtoupper($word);
+          if ($this->is_initial($unfiltered_name_parts[$i + 1])) {
+            $fname .= " " . mb_strtoupper($word);
+          } else {
+            $initials .= " " . mb_strtoupper($word);
           }
         }
         # otherwise, just go ahead and save the initial
         else {
-          $initials .= " ".mb_strtoupper($word);
+          $initials .= " " . mb_strtoupper($word);
         }
-      }
-      else {
-        $fname .= " ".$this->fix_case($word);
+      } else {
+        $fname .= " " . $this->fix_case($word);
       }
     }
 
-    if( count($unfiltered_name_parts)) {
+    if (count($unfiltered_name_parts)) {
       # check that we have more than 1 word in our string
-      if ($end-0 > 1) {
+      if ($end - 0 > 1) {
         # concat the last name and split last name in base and compound
         for ($i; $i < $end; $i++) {
           if ($this->is_compound($unfiltered_name_parts[$i])) {
-            $lname_compound .= " ".$unfiltered_name_parts[$i];
+            $lname_compound .= " " . $unfiltered_name_parts[$i];
           } else {
-            $lname_base .= " ".$this->fix_case($unfiltered_name_parts[$i]);
+            $lname_base .= " " . $this->fix_case($unfiltered_name_parts[$i]);
           }
-          $lname .= " ".$this->fix_case($unfiltered_name_parts[$i]);
+          $lname .= " " . $this->fix_case($unfiltered_name_parts[$i]);
         }
-      }
-      else {
+      } else {
         # otherwise, single word strings are assumed to be first names
         $fname = $this->fix_case($unfiltered_name_parts[$i]);
       }
@@ -308,11 +307,12 @@ class FullNameParser {
    * @param string $name the full name you wish to parse
    * @return array full list of words broken down by spaces
    */
-  public function break_words($name) {
+  public function break_words($name)
+  {
     $temp_word_arr = explode(' ', $name);
     $final_word_arr = array();
     foreach ($temp_word_arr as $key => $word) {
-      if( $word != "" && $word != ",") {
+      if ($word != "" && $word != ",") {
         $final_word_arr[] = $word;
       }
     }
@@ -327,14 +327,15 @@ class FullNameParser {
    * @param string $name the name you wish to test
    * @return mixed returns the suffix if exists, false otherwise
    */
-  public function get_pro_suffix($name) {
+  public function get_pro_suffix($name)
+  {
 
     $found_suffix_arr = array();
     foreach ($this->dict['suffixes']['prof'] as $suffix) {
-      if (preg_match('/[,\s]+'.preg_quote($suffix).'\b/i', $name, $matches)) {
+      if (preg_match('/[,\s]+' . preg_quote($suffix) . '\b/i', $name, $matches)) {
         $found_suffix = trim($matches[0]);
-        $found_suffix = rtrim($found_suffix,',');
-        $found_suffix = ltrim($found_suffix,',');
+        $found_suffix = rtrim($found_suffix, ',');
+        $found_suffix = ltrim($found_suffix, ',');
         $found_suffix_arr[] = trim($found_suffix);
       }
     }
@@ -355,9 +356,10 @@ class FullNameParser {
    * @param string $name the name you wish to test against
    * @return mixed returns nickname if exists, false otherwise
    */
-  protected function get_nickname($name) {
+  protected function get_nickname($name)
+  {
     if (preg_match("/[\(|\"].*?[\)|\"]/", $name, $matches)) {
-      if( ! in_array( mb_strtolower($matches[0]), $this->not_nicknames ) ) {
+      if (!in_array(mb_strtolower($matches[0]), $this->not_nicknames)) {
         return $matches[0];
       } else {
         return false;
@@ -375,11 +377,12 @@ class FullNameParser {
    * @param string $name full name for context in determining edge-cases
    * @return mixed boolean if false, string if true (returns suffix)
    */
-  protected function is_line_suffix($word, $name) {
+  protected function is_line_suffix($word, $name)
+  {
 
     # Ignore periods and righ commas, normalize case
     $word = str_replace('.', '', mb_strtolower($word));
-    $word = rtrim($word,',');
+    $word = rtrim($word, ',');
 
     # Search the array for our word
     $line_match = array_search($word, array_map('mb_strtolower', $this->dict['suffixes']['line']));
@@ -405,7 +408,7 @@ class FullNameParser {
         # If the word Junior or Senior is contained, but so is some other
         # lineage suffix, then the word is likely a surname and not a suffix
         foreach ($temp_array as $suffix) {
-          if (preg_match("/\b".$suffix."\b/i", $name)) {
+          if (preg_match("/\b" . $suffix . "\b/i", $name)) {
             return false;
           }
         }
@@ -423,7 +426,8 @@ class FullNameParser {
    * @param string $word the single word you wish to test
    * @return boolean
    */
-  protected function is_salutation($word) {
+  protected function is_salutation($word)
+  {
     $word = str_replace('.', '', mb_strtolower($word));
     foreach ($this->dict['prefix'] as $replace => $originals) {
       if (in_array($word, $originals)) {
@@ -441,7 +445,8 @@ class FullNameParser {
    * @param string $word the single word you wish to test
    * @return boolean
    */
-  protected function is_compound($word) {
+  protected function is_compound($word)
+  {
     return in_array(mb_strtolower($word), $this->dict['compound']);
   }
 
@@ -453,7 +458,8 @@ class FullNameParser {
    * @param string $word the single word you wish to test
    * @return boolean
    */
-  protected function is_initial($word) {
+  protected function is_initial($word)
+  {
     return ((mb_strlen($word) == 1) || (mb_strlen($word) == 2 && $word[1] == "."));
   }
 
@@ -465,7 +471,8 @@ class FullNameParser {
    * @param string $word the single word you wish to test
    * @return boolean
    */
-  protected function is_camel_case($word) {
+  protected function is_camel_case($word)
+  {
     if (preg_match('/\p{L}(\p{Lu}*\p{Ll}\p{Ll}*\p{Lu}|\p{Ll}*\p{Lu}\p{Lu}*\p{Ll})\p{L}*/', $word)) {
       return true;
     }
@@ -474,7 +481,8 @@ class FullNameParser {
 
   # ucfirst words split by dashes or periods
   # ucfirst all upper/lower strings, but leave camelcase words alone
-  public function fix_case($word) {
+  public function fix_case($word)
+  {
 
     # Fix case for words split by periods (J.P.)
     if (mb_strpos($word, '.') !== false) {
@@ -512,7 +520,7 @@ class FullNameParser {
     }
 
     # Fix case for words which aren't initials, but are all uppercase or lowercase
-    if ( (mb_strlen($word) >= 3) && ($this->mb_ctype_upper($word) || $this->mb_ctype_lower($word)) ) {
+    if ((mb_strlen($word) >= 3) && ($this->mb_ctype_upper($word) || $this->mb_ctype_lower($word))) {
       $word = $this->mb_ucfirst(mb_strtolower($word));
     }
 
@@ -520,7 +528,8 @@ class FullNameParser {
   }
 
   # helper public function for fix_case
-  public function safe_ucfirst($seperator, $word) {
+  public function safe_ucfirst($seperator, $word)
+  {
     # uppercase words split by the seperator (ex. dashes or periods)
     $parts = explode($seperator, $word);
     foreach ($parts as $word) {
@@ -529,46 +538,46 @@ class FullNameParser {
     return implode($seperator, $words);
   }
 
-    # helper public function for multibytes ctype_alpha
-    public function mb_ctype_alpha($text)
-    {
-      return (bool)preg_match('/^\p{L}*$/', $text);
+  # helper public function for multibytes ctype_alpha
+  public function mb_ctype_alpha($text)
+  {
+    return (bool)preg_match('/^\p{L}*$/', $text);
+  }
+
+  # helper public function for multibytes ctype_lower
+  public function mb_ctype_lower($text)
+  {
+    return (bool)preg_match('/^\p{Ll}*$/', $text);
+  }
+
+  # helper public function for multibytes ctype_upper
+  public function mb_ctype_upper($text)
+  {
+    return (bool)preg_match('/^\p{Lu}*$/', $text);
+  }
+
+  # helper public function for multibytes str_word_count
+  public function mb_str_word_count($text)
+  {
+    if (empty($text)) {
+      return 0;
     }
 
-    # helper public function for multibytes ctype_lower
-    public function mb_ctype_lower($text)
-    {
-      return (bool)preg_match('/^\p{Ll}*$/', $text);
+    $matchesCount = preg_match_all('/\s+/', $text);
+
+    if (!$matchesCount) {
+      return 1;
     }
 
-    # helper public function for multibytes ctype_upper
-    public function mb_ctype_upper($text)
-    {
-      return (bool)preg_match('/^\p{Lu}*$/', $text);
-    }
+    return $matchesCount + 1;
+  }
 
-    # helper public function for multibytes str_word_count
-    public function mb_str_word_count($text)
-    {
-      if (empty($text)) {
-        return 0;
-      }
-
-      $matchesCount = preg_match_all('/\s+/', $text);
-
-      if (!$matchesCount) {
-        return 1;
-      }
-      
-      return $matchesCount + 1;
-    }
-
-    # helper public function for multibytes ucfirst
-    public function mb_ucfirst($string)
-    {
-      $strlen = mb_strlen($string);
-      $firstChar = mb_substr($string, 0, 1);
-      $then = mb_substr($string, 1, $strlen - 1);
-      return mb_strtoupper($firstChar) . $then;
-    }
+  # helper public function for multibytes ucfirst
+  public function mb_ucfirst($string)
+  {
+    $strlen = mb_strlen($string);
+    $firstChar = mb_substr($string, 0, 1);
+    $then = mb_substr($string, 1, $strlen - 1);
+    return mb_strtoupper($firstChar) . $then;
+  }
 }

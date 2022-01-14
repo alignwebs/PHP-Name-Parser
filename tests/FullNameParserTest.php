@@ -1,5 +1,6 @@
 <?php
 
+use FullNameParser\FullNameParser;
 use PHPUnit\Framework\TestCase;
 
 class FullNameParserTest extends TestCase

@@ -1,5 +1,6 @@
 <?php
 
+use FullNameParser\FullNameParser;
 use PHPUnit\Framework\TestCase;
 
 class HelperFunctionsTest extends TestCase
@@ -16,13 +17,13 @@ class HelperFunctionsTest extends TestCase
         $this->assertEquals('Word', $this->parser->mb_ucfirst('word'));
     }
 
-    public function testMbStrWordCount() 
+    public function testMbStrWordCount()
     {
         $examples = [
             '' => 0,
             'word' => 1,
             'word word' => 2,
-            'word word word' => 3, 
+            'word word word' => 3,
         ];
 
         foreach ($examples as $string => $expected) {
