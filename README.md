@@ -5,7 +5,7 @@ PHP library to split names into their respective components.  Besides detecting 
 
 **Installation:**
     
-    `composer require alignwebs/php-name-parser`
+    composer require alignwebs/php-name-parser
 
 **Usage:**
     
